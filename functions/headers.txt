@@ -1,0 +1,17 @@
+HTTP/1.1 400 Bad Request
+Server: nginx
+Content-Type: application/json
+Content-Length: 44
+Access-Control-Allow-Origin: https://www.trainline.fr
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, HEAD
+Access-Control-Expose-Headers: X-CT-Status, X-Request-Id, X-CT-Timestamp
+Access-Control-Max-Age: 1728000
+Vary: Origin
+X-CT-Status: OK
+Cache-Control: no-cache
+X-Request-Id: 72573d34-5812-4a07-b487-66b9f8958900
+X-Runtime: 0.017971
+Date: Fri, 31 May 2019 09:23:45 GMT
+Connection: close
+Set-Cookie: ak_bmsc=8FA6CD9B0D08A0A457AC6FB49026EE3102112B7FF22D0000172AF05C8A30AE12~plVSKXHKAddZma54iUEOF6xb1oUKIe/ytKWDu5pMhImk2RvtjeQUPM4q24gI1yYTE28gXIHDXjAAzoDWZy6CMnvSCob8GnvOsa/f4W1RBZy3AheZPe2Z7gPQcX2SScWUnsmyXrbPKaGsobkr4ugAbUnkicOZQ8ZfAbEfWRFiwigCVsSMLCENVr3gRkgdAhewpdRNB95toylV0xYlIIopbZziXkNJ4re0G+ijqO5euiREQ=; expires=Thu, 01 Jan 1970 00:00:01 GMT; max-age=0; path=/; domain=.trainline.fr; HttpOnly
+

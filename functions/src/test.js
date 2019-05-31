@@ -1,17 +1,34 @@
-const client = require('./api/trainlineClient');
-global.fetch = require('node-fetch');
-global.FormData = require('form-data');
-global.URLSearchParams = require('url').URLSearchParams;
+// const client = require('./api/trainlineClient');
+const got = require('got');
+const { CookieJar, Cookie } = require('tough-cookie');
+const chalk = require('chalk');
+const fs = require('fs');
+const fetch = require('node-fetch');
+
+// const cookieJar = new CookieJar();
+
+// const newCookie = new Cookie({
+// 	key: 'ak_bmsc',
+// 	value:
+// 		'420C9142050635A6DB0434039D080EEB02112B7FF22D0000CCE4F05C7C3AD032~plKeoehufMpnukOOZZqup3Xh56Q1qmBHAeh7ZQBFIvvq8eT6Ragwr7snQTxkSWXlZ/g1I/w3Wo1AgnY3bL1gwM0rE/tBLXMN40OiXpP+5YSr+dst8TyxMiylfPFhFzH3/AVXw0TIXUb9oN7Rsui9zrd9LBkd3VX1ykaGkCynFBL2cNgUU5WDrCEhV7Do8rCwg4CDGzCSc6QM7BpnE95Yl6d0JLBVYIWFrt7Q++k5xyPks=',
+// });
+
+// cookieJar.setCookie(newCookie, 'https://www.trainline.fr/api/v5_1');
+
+// const client = got.extend({
+// 	baseUrl: 'https://www.trainline.fr/api/v5_1',
+// 	// cookieJar,
+// });
 
 const CURRENT_COOKIE =
-	'ak_bmsc=8FA6CD9B0D08A0A457AC6FB49026EE3102112B7FF22D0000172AF05C8A30AE12~plVSKXHKAddZma54iUEOF6xb1oUKIe/ytKWDu5pMhImk2RvtjeQUPM4q24gI1yYTE28gXIHDXjAAzoDWZy6CMnvSCob8GnvOsa/f4W1RBZy3AheZPe2Z7gPQcX2SScWUnsmyXrbPKaGsobkr4ugAbUnkicOZQ8ZfAbEfWRFiwigCVsSMLCENVr3gRkgdAhewpdRNB95toylV0xYlIIopbZziXkNJ4re0G+ijqO5euiREQ=';
+	'ak_bmsc=420C9142050635A6DB0434039D080EEB02112B7FF22D0000CCE4F05C7C3AD032~plKeoehufMpnukOOZZqup3Xh56Q1qmBHAeh7ZQBFIvvq8eT6Ragwr7snQTxkSWXlZ/g1I/w3Wo1AgnY3bL1gwM0rE/tBLXMN40OiXpP+5YSr+dst8TyxMiylfPFhFzH3/AVXw0TIXUb9oN7Rsui9zrd9LBkd3VX1ykaGkCynFBL2cNgUU5WDrCEhV7Do8rCwg4CDGzCSc6QM7BpnE95Yl6d0JLBVYIWFrt7Q++k5xyPks=';
 
 const headers = {
 	Accept: 'application/json, text/javascript, */*; q=0.01',
 	Authorization: 'Token token="x_SWv44gNKKrfCGrpnGH"',
 	'Cache-Control': 'no-cache',
 	'Content-Type': 'application/json; charset=UTF-8',
-	Cookie: CURRENT_COOKIE,
+	// Cookie: CURRENT_COOKIE,
 	'X-Ct-Client-Id': '21c74d7c-f476-4501-8524-e17bd1108efb',
 	'X-Ct-Locale': 'fr',
 	'X-Ct-Timestamp': '1559133583',
@@ -61,43 +78,69 @@ const body = JSON.stringify({
 	},
 });
 
-(async () => {
-	console.log('LAUNCHING');
+const classic = async () => {
+	console.debug(chalk.blue('CHECKING FIRST GET...'));
 
-	// const result = await client.get('/', {
-	// 	baseUrl: 'https://www.trainline.fr/search',
-	// 	headers: {
-	// 		accept:
-	// 			'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
-	// 		'accept-language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,und;q=0.6',
-	// 		'cache-control': 'max-age=0',
-	// 		'upgrade-insecure-requests': '1',
-	// 		Host: 'www.trainline.fr',
-	// 	},
+	const cookieJar = new CookieJar();
+
+	// const newCookie = new Cookie({
+	// 	key: 'ak_bmsc',
+	// 	value:
+	// 		'420C9142050635A6DB0434039D080EEB02112B7FF22D0000CCE4F05C7C3AD032~plKeoehufMpnukOOZZqup3Xh56Q1qmBHAeh7ZQBFIvvq8eT6Ragwr7snQTxkSWXlZ/g1I/w3Wo1AgnY3bL1gwM0rE/tBLXMN40OiXpP+5YSr+dst8TyxMiylfPFhFzH3/AVXw0TIXUb9oN7Rsui9zrd9LBkd3VX1ykaGkCynFBL2cNgUU5WDrCEhV7Do8rCwg4CDGzCSc6QM7BpnE95Yl6d0JLBVYIWFrt7Q++k5xyPks=',
 	// });
 
-	// console.log(result.body);
-	// console.log(result.headers);
-	// console.log('COUCOU');
-	// console.log(client.defaults.options.cookieJar);
+	// await cookieJar.setCookie(
+	// 	newCookie,
+	// 	'https://www.trainline.fr/api/v5_1',
+	// 	() => {
+	// 		console.debug(chalk.dim('\n\nCOOKIE SET IN COOKIE JAR\n'));
+	// 	},
+	// );
 
-	const endresult = await client
+	const client = got.extend({
+		baseUrl: 'https://www.trainline.fr/api/v5_1',
+		cookieJar,
+	});
+	console.debug(chalk.dim('\n\nCOOKIE JAR REGISTERED IN CLIENT\n'));
+
+	const simpleRequest = await client.get('/', {
+		baseUrl: 'https://www.trainline.fr',
+		// credentials: 'omit',
+		credentials: 'same-origin',
+		// referrerPolicy: 'no-referrer-when-downgrade',
+		// mode: 'cors',
+		headers: {
+			accept:
+				'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+			'accept-language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,und;q=0.6',
+			'cache-control': 'max-age=0',
+			'upgrade-insecure-requests': '1',
+			cookie: CURRENT_COOKIE,
+		},
+	});
+
+	console.debug(chalk.bold.blue('\n\nSIMPLE GET RESPONSE HEADERS\n'));
+	console.debug(simpleRequest.headers);
+
+	console.debug(chalk.bold.blue('\n\nCOOKIE JAR NEW COOKIES\n'));
+	console.log(cookieJar);
+	await cookieJar.getCookies('trainline.fr', {}, cb => {
+		console.debug(cb);
+	});
+
+	const searchRequest = await client
 		.post('search', {
 			body,
 			headers,
 		})
 		.catch(error => {
-			console.log(error);
+			console.debug(error);
 			exit(0);
 		});
 
-	// const endresult2 = await wretch('https://www.trainline.fr/api/v5_1/search')
-	// 	.headers(headers)
-	// 	.post(body)
-	// 	.res(response => console.log(response))
-	// 	.catch(err => console.log(err));
-
-	console.log(endresult);
-	console.log('\n\n\n\nHEADERS');
-	console.log(endresult.headers);
-})();
+	console.debug(chalk.bold.blue('\n\nRESPONSE BODY (first folder only)\n'));
+	console.debug(searchRequest.body);
+	console.debug(chalk.bold.blue('\n\nRESPONSE HEADERS\n'));
+	console.debug(searchRequest.headers);
+};
+// classic()
