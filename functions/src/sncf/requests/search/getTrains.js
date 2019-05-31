@@ -1,9 +1,9 @@
-const trainBody = require('./trainBody');
-const wishBody = require('./wishBody');
-const oui = require('./clientOui');
+const trainBody = require('./train/trainBody');
+const wishBody = require('./wish/wishBody');
+const oui = require('../../clientOui');
 
-const log = require('./logger');
-const { BLUE, RED, GREEN, DIM } = require('./logger');
+const log = require('../../logger');
+const { BLUE, RED, GREEN, DIM } = require('../../logger');
 
 module.exports = async travel => {
 	const getWishId = await oui
@@ -25,7 +25,13 @@ module.exports = async travel => {
 
 	const data = JSON.parse(proposition.body);
 	const trains = data.travelProposals;
-	const tgvmax = trains.filter(train => train.minPrice === 0);
+	const tgvmax = trains
+		.filter(train => train.minPrice === 0)
+		.map(({ departureDate, arrivalDate, minPrice }) => ({
+			departureDate,
+			arrivalDate,
+			minPrice,
+		}));
 
 	return tgvmax;
 };

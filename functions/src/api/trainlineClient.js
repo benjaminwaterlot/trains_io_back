@@ -1,7 +1,8 @@
 const got = require('got');
-const tough, { CookieJar, Cookie } = require('tough-cookie');
+const { CookieJar, Cookie } = require('tough-cookie');
+const tough = require('tough-cookie');
 
-const newCookie = new Cookie()
+const newCookie = new Cookie();
 
 const cookieJar = new CookieJar();
 

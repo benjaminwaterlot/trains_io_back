@@ -1,31 +1,44 @@
+const chalk = require('chalk');
+
 const Search = require('./Search');
-const getMax = require('./getMax');
+const getTrains = require('./requests/search/getTrains');
+const getCities = require('./requests/cities/getCities');
 
 const oui = require('./clientOui');
 const log = require('./logger');
 const { BLUE, RED, GREEN, DIM } = require('./logger');
 
-const argDate = process.argv[2];
-if (!argDate) throw new Error(chalk.red('NO PARAM !'));
+// const argFrom = process.argv[2];
+// const argTo = process.argv[3];
 
-const travel = new Search(
-	'FRPAR',
-	'FRCMF',
-	`2019-${argDate}T12:00:00`,
-	`2019-${argDate}T12:00:00`,
-);
+// const argStart = process.argv[4];
+// if (!argStart || !argFrom || !argTo) throw new Error(chalk.red('NO PARAM !'));
 
-const main = async () => {
-	const search = await oui.get(
-		'https://booking.oui.sncf/booking/autocomplete-d2d?uc=fr-FR&searchField=origin&searchTerm=chamb',
+module.exports = async (argFrom, argTo, argStart) => {
+	const from = await getCities(argFrom).catch(err => {
+		throw new Error(err);
+	});
+
+	const to = await getCities(argTo).catch(err => {
+		throw new Error(err);
+	});
+
+	const travel = new Search(
+		from,
+		to,
+		`2019-${argStart}T12:00:00`,
+		`2019-${argStart}T12:00:00`,
 	);
 
-	console.log(search.body);
+	log(BLUE)(`SEARCHING FOR ${from} to ${to} at ${argStart}`);
 
-	const tgvmax = await getMax(travel);
+	console.log('DATE: ');
+	console.log(new Date(travel.start));
+	const tgvmax = await getTrains(travel);
 
 	log(RED)(`NUMBER OF TGVMAX: ${tgvmax.length}`);
 	console.debug(tgvmax);
+	return tgvmax;
 };
 
-main();
+// main(argFrom, argTo, argStart).catch(err => console.log(err));

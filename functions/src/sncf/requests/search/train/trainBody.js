@@ -1,4 +1,4 @@
-const { now } = require('./helpers');
+const { now } = require('../../../helpers');
 
 module.exports = travel => ({
 	context: {},
