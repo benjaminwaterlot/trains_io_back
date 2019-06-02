@@ -17,13 +17,14 @@ admin.initializeApp({
 
 exports.getTrains = functions.https.onRequest(async (request, response) => {
 	const url_parts = url.parse(request.url, true);
-	console.log('COUCOU');
-	console.log(typeof url_parts);
-	// firestore.collection('watchers').get()
-	const all = await firestore.collection('watchers').get();
-	const log = all.docs.map(doc => {
-		console.log(doc);
-	});
+	await firestore.collection('watchers').get();
+
+	// USEFUL
+	// const all = await firestore.collection('watchers').get();
+	// const log = all.docs.map(doc => {
+	// 	console.log(doc);
+	// });
+
 	// var propValue;
 	// for (var propName in url_parts) {
 	// 	propValue = url_parts[propName];
